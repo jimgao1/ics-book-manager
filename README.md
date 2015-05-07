@@ -1,5 +1,5 @@
 # book-manager
-A Book Manager for my CompSci summative assignment
+A Book Manager for my CompSci summative assignment<br>
 <img src="https://raw.githubusercontent.com/jimthenerd/book-manager/master/bookmanager.png" width="350">
 
 ###Building
