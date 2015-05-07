@@ -149,6 +149,11 @@ public class BookManager {
 		activeList.clear();
 		dataCaption.setText("Book List: ");
 		
+		for (int i=0; i<BookManager.records.size(); i++){
+			if (records.get(i).name == null)
+				BookManager.records.remove(i);
+		}
+		
 		for (BookRecord r : BookManager.records)
 			activeList.addElement(r.name);
 	}
@@ -310,7 +315,6 @@ public class BookManager {
 				public void actionPerformed(ActionEvent arg0) {
 					BookManager.records.add(new BookRecord());
 					new BookInformationBox(BookManager.records.size() - 1);
-					BookManager.resetBookList();
 				}
 			});
 			

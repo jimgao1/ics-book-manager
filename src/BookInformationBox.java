@@ -120,6 +120,7 @@ public class BookInformationBox extends JFrame implements ActionListener{
 			BookManager.records.get(rIndex).coverPrice = Double.parseDouble(txtCoverPrice.getText());
 			
 			JOptionPane.showMessageDialog(null, "Book Record Updated");
+			BookManager.resetBookList();
 			this.dispose();
 		} else {
 			this.dispose();
