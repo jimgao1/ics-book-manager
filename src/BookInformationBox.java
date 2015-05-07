@@ -15,8 +15,14 @@ import javax.swing.JTextField;
 
 public class BookInformationBox extends JFrame implements ActionListener{
 	
+	/*
+	 * 		The index of the book information editing
+	 */
 	public static int rIndex;
 	
+	/*
+	 * 		GUI Components Declaration
+	 */
 	public JTextField txtName = new JTextField();
 	public JTextField txtAuthor = new JTextField();
 	public JTextField txtType = new JTextField();
@@ -33,6 +39,7 @@ public class BookInformationBox extends JFrame implements ActionListener{
 		this.setLayout(new FlowLayout());
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.setResizable(false);
+		this.setTitle("Book Information");
 		
 		txtName.setFont(new Font("Courier New", Font.PLAIN, 15));
 		txtAuthor.setFont(new Font("Courier New", Font.PLAIN, 15));
@@ -50,6 +57,10 @@ public class BookInformationBox extends JFrame implements ActionListener{
 		infoPanel.setLayout(new GridLayout(6, 2));
 		infoPanel.setPreferredSize(new Dimension(480, 200));
 		
+		/*
+		 * 		Fill in the book properties into the textfields
+		 */
+		
 		txtName.setText(BookManager.records.get(rIndex).name);
 		txtAuthor.setText(BookManager.records.get(rIndex).author);
 		txtType.setText(BookManager.records.get(rIndex).type);
@@ -57,6 +68,9 @@ public class BookInformationBox extends JFrame implements ActionListener{
 		txtISBN.setText(BookManager.records.get(rIndex).isbn);
 		txtCoverPrice.setText(Double.toString(BookManager.records.get(rIndex).coverPrice));
 		
+		/*
+		 * 		Adds the fields onto the JPanel
+		 */
 		infoPanel.add(new JLabel("Book Name: "));
 		infoPanel.add(txtName);
 		infoPanel.add(new JLabel("Book Author: "));
@@ -73,10 +87,10 @@ public class BookInformationBox extends JFrame implements ActionListener{
 		JPanel confirmPanel = new JPanel();
 		confirmPanel.setLayout(new FlowLayout());
 		
-		JButton updateInfo = new JButton("Update");
+		JButton updateInfo = new JButton("Update Record");
 		updateInfo.addActionListener(this);
 		
-		JButton closeWindow = new JButton("Close");
+		JButton closeWindow = new JButton("Close Window");
 		closeWindow.addActionListener(this);
 		
 		confirmPanel.add(updateInfo);
@@ -91,9 +105,13 @@ public class BookInformationBox extends JFrame implements ActionListener{
 		this.revalidate();
 	}
 
+	
+	/*
+	 * 		Event handler to save, or close the window
+	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (e.getActionCommand() == "Update"){
+		if (e.getActionCommand() == "Update Record"){
 			BookManager.records.get(rIndex).name = txtName.getText();
 			BookManager.records.get(rIndex).author = txtAuthor.getText();
 			BookManager.records.get(rIndex).type = txtType.getText();
