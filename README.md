@@ -1,5 +1,6 @@
 # book-manager
 A Book Manager for my CompSci summative assignment
+![Image of MainGUI](https://raw.githubusercontent.com/jimthenerd/book-manager/master/bookmanager.png)
 
 ###Building
 
