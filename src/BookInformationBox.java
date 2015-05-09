@@ -126,7 +126,7 @@ public class BookInformationBox extends JFrame implements ActionListener {
 					JOptionPane.showMessageDialog(null, "ISBN can only contain numeric characters.");
 					return;
 				}
-				s += (i % 2 == 0 ? 3 : 1) * a;
+				s += ((i+1) % 2 == 0 ? 3 : 1) * a;
 			}
 			s %= 10;
 			s = 10 - s;
