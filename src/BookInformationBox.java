@@ -110,11 +110,59 @@ public class BookInformationBox extends JFrame implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand() == "Update Record") {
+			// Validate ISBN
+			String isbn = txtISBN.getText().replaceAll("-", "");
+			if (isbn.length() == 10) {
+				isbn = "978" + isbn;
+			}
+			if (isbn.length() != 13) {
+				JOptionPane.showMessageDialog(null, "ISBN too short or too long.");
+				return;
+			}
+			int s = 0;
+			for (int i = 0; i < isbn.length() - 1; i++) {
+				int a = isbn.charAt(i) - '0';
+				if (a < 0 || a > 9) {
+					JOptionPane.showMessageDialog(null, "ISBN can only contain numeric characters.");
+					return;
+				}
+				s += (i % 2 == 0 ? 3 : 1) * a;
+			}
+			s %= 10;
+			s = 10 - s;
+			if(s != isbn.charAt(12)-'0'){
+				JOptionPane.showMessageDialog(null, "ISBN contains an invalid check number.");
+				return;
+			}
+			isbn = isbn.substring(0, 3) + "-" + isbn.charAt(3) + "-"  + isbn.substring(4, 6) + "-"  + isbn.substring(6, 12) + "-" + isbn.charAt(12);
+
+			// Validate publication year
+			for (int i = 0; i < txtYearPublished.getText().length() - 1; i++) {
+				int a = txtYearPublished.getText().charAt(i) - '0';
+				if (a < 0 || a > 9) {
+					JOptionPane.showMessageDialog(null, "Publication year can only contain numeric characters.");
+					return;
+				}
+			}
+			
+			// Validate price
+			for (int i = 0; i < txtCoverPrice.getText().length() - 1; i++) {
+				int a = txtCoverPrice.getText().charAt(i) - '0';
+				if (a < 0 || a > 9) {
+					JOptionPane.showMessageDialog(null, "Cover price can only contain numeric characters.");
+					return;
+				}
+			}
+			if(Integer.parseInt(txtCoverPrice.getText()) < 0){
+				JOptionPane.showMessageDialog(null, "Cover price cannot be negative");
+				return;
+			}
+			
 			BookManager.records.get(rIndex).name = txtName.getText();
 			BookManager.records.get(rIndex).author = txtAuthor.getText();
 			BookManager.records.get(rIndex).type = txtType.getText();
 			BookManager.records.get(rIndex).yearPublished = txtYearPublished.getText();
-			BookManager.records.get(rIndex).isbn = txtISBN.getText();
+			BookManager.records.get(rIndex).isbn = isbn;
 			BookManager.records.get(rIndex).coverPrice = Double.parseDouble(txtCoverPrice.getText());
 
 			JOptionPane.showMessageDialog(null, "Book Record Updated");
