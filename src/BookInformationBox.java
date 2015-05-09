@@ -119,45 +119,48 @@ public class BookInformationBox extends JFrame implements ActionListener {
 				JOptionPane.showMessageDialog(null, "ISBN too short or too long.");
 				return;
 			}
-			int s = 0;
-			for (int i = 0; i < isbn.length() - 1; i++) {
-				int a = isbn.charAt(i) - '0';
-				if (a < 0 || a > 9) {
-					JOptionPane.showMessageDialog(null, "ISBN can only contain numeric characters.");
+			try {
+				int tot = 0;
+				for (int i = 0; i < 12; i++) {
+					int digit = Integer.parseInt(isbn.substring(i, i + 1));
+					tot += (i % 2 == 0) ? digit * 1 : digit * 3;
+				}
+				int checksum = 10 - (tot % 10);
+				if (checksum == 10) {
+					checksum = 0;
+				}
+
+				if (checksum != Integer.parseInt(isbn.substring(12))) {
 					return;
 				}
-				s += ((i+1) % 2 == 0 ? 3 : 1) * a;
-			}
-			s %= 10;
-			s = 10 - s;
-			if(s != isbn.charAt(12)-'0'){
-				JOptionPane.showMessageDialog(null, "ISBN contains an invalid check number.");
+			} catch (NumberFormatException nfe) {
+				JOptionPane.showMessageDialog(null, "ISBN can only contain numeric characters.");
 				return;
 			}
-			isbn = isbn.substring(0, 3) + "-" + isbn.charAt(3) + "-"  + isbn.substring(4, 6) + "-"  + isbn.substring(6, 12) + "-" + isbn.charAt(12);
+			isbn = isbn.substring(0, 3) + "-" + isbn.charAt(3) + "-" + isbn.substring(4, 6) + "-" + isbn.substring(6, 12) + "-" + isbn.charAt(12);
 
 			// Validate publication year
-			for (int i = 0; i < txtYearPublished.getText().length() - 1; i++) {
+			for (int i = 0; i < txtYearPublished.getText().length(); i++) {
 				int a = txtYearPublished.getText().charAt(i) - '0';
 				if (a < 0 || a > 9) {
 					JOptionPane.showMessageDialog(null, "Publication year can only contain numeric characters.");
 					return;
 				}
 			}
-			
+
 			// Validate price
-			for (int i = 0; i < txtCoverPrice.getText().length() - 1; i++) {
+			for (int i = 0; i < txtCoverPrice.getText().length(); i++) {
 				int a = txtCoverPrice.getText().charAt(i) - '0';
-				if (a < 0 || a > 9) {
+				if ((a < 0 || a > 9) & a != -2) {
 					JOptionPane.showMessageDialog(null, "Cover price can only contain numeric characters.");
 					return;
 				}
 			}
-			if(Integer.parseInt(txtCoverPrice.getText()) < 0){
-				JOptionPane.showMessageDialog(null, "Cover price cannot be negative");
+			if (Double.parseDouble(txtCoverPrice.getText()) < 0) {
+				JOptionPane.showMessageDialog(null, "Cover price cannot be negative.");
 				return;
 			}
-			
+
 			BookManager.records.get(rIndex).name = txtName.getText();
 			BookManager.records.get(rIndex).author = txtAuthor.getText();
 			BookManager.records.get(rIndex).type = txtType.getText();
