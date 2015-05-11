@@ -5,8 +5,11 @@ A Book Manager for my CompSci summative assignment<br>
 ###Features
 
 > Serializes information to a text file
+
 > Fuzzy search algorithm based on edit distance
+
 > Sorting by various fields
+
 > User friendly GUI
 
 ###Building
