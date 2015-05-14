@@ -197,6 +197,14 @@ public class BookManager {
 	public static class MainGUI extends JFrame {
 
 		public MainGUI() {
+			
+			/*
+			 * 	Critical data structure construction
+			 * 
+			 * 	records: the arraylist of the class BookRecord
+			 * 	activeList: the list of the current items in the jList
+			 * 	bookList: the actual GUI component
+			 */
 			records = new ArrayList<BookRecord>();
 			activeList = new DefaultListModel<String>();
 			bookList = new JList(activeList);
@@ -268,7 +276,7 @@ public class BookManager {
 			 * I am using independent action listener for every single button,
 			 * doing so can significantly decrease runtime complexity since no
 			 * string comparison (time complexity o(n)) is required. This also
-			 * makes code more managable.
+			 * makes code more manageable.
 			 */
 
 			bookList.addMouseListener(new MouseAdapter() {
@@ -304,23 +312,32 @@ public class BookManager {
 			/*
 			 * Delete Book button Gets the selected book, check the global
 			 * database for index, and then removes it
+			 * 
+			 * It asks the user if they are sure to delete the book record,
+			 * if yes, it deletes the record
 			 */
 			deleteBook.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					String bookName = (String) bookList.getSelectedValue();
-
-					if (bookName != null) {
-
-						int index = -1;
-						for (int i = 0; i < BookManager.records.size(); i++)
-							if (BookManager.records.get(i).name == bookName) {
-								index = i;
-								break;
+					
+					if (bookName != null){
+						int response = JOptionPane.showConfirmDialog(null, "Are you sure to delete book " + bookName + "? ");
+						
+						if (response == JOptionPane.YES_OPTION){
+							if (bookName != null) {
+		
+								int index = -1;
+								for (int i = 0; i < BookManager.records.size(); i++)
+									if (BookManager.records.get(i).name == bookName) {
+										index = i;
+										break;
+									}
+		
+								BookManager.records.remove(index);
+								BookManager.resetBookList();
 							}
-
-						BookManager.records.remove(index);
-						BookManager.resetBookList();
+						}
 					} else {
 						JOptionPane.showMessageDialog(null, "Please select an item");
 					}
@@ -330,6 +347,9 @@ public class BookManager {
 			/*
 			 * Search by Name: Iterate through the array, uses the fuzzy search
 			 * algorithm, add ONLY the items that satisfy into the final array
+			 * 
+			 * The edit distance algorithm takes in the books whose name has
+			 * an edit distance less or equals to 5. 
 			 */
 			searchName.addActionListener(new ActionListener() {
 				@Override
