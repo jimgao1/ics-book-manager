@@ -29,10 +29,19 @@ public class BookInformationBox extends JFrame implements ActionListener {
 	public JTextField txtISBN = new JTextField();
 	public JTextField txtCoverPrice = new JTextField();
 
+	/*
+	 * 	Constructor of BookInformationBox
+	 * 
+	 * 	Takes in the index of the record, and verifies it, and then
+	 * 	displays the corresponding record from the database
+	 */
 	public BookInformationBox(int recordIndex) {
 
 		BookInformationBox.rIndex = recordIndex;
 
+		/*
+		 * 		Construction of the BookInformationBox
+		 */
 		this.setLocation(300, 300);
 		this.setSize(500, 300);
 		this.setLayout(new FlowLayout());
@@ -47,17 +56,23 @@ public class BookInformationBox extends JFrame implements ActionListener {
 		txtISBN.setFont(new Font("Courier New", Font.PLAIN, 15));
 		txtCoverPrice.setFont(new Font("Courier New", Font.PLAIN, 15));
 
+		/*
+		 * 	Verifies the current record index, if invalid, the quit program
+		 */
 		if (recordIndex < 0 || recordIndex >= BookManager.records.size()) {
 			JOptionPane.showMessageDialog(null, "Invalid Book Record ID");
 			this.dispose();
 		}
 
+		/*
+		 *  Creates the information panel containing the info
+		 */
 		JPanel infoPanel = new JPanel();
 		infoPanel.setLayout(new GridLayout(6, 2));
 		infoPanel.setPreferredSize(new Dimension(480, 200));
 
 		/*
-		 * Fill in the book properties into the textfields
+		 * Fill in the book properties into the text fields
 		 */
 
 		txtName.setText(BookManager.records.get(rIndex).name);
@@ -110,8 +125,22 @@ public class BookInformationBox extends JFrame implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand() == "Update Record") {
-			// Validate ISBN
-			String isbn = txtISBN.getText().replaceAll("-", "");
+			
+			/*
+			 * 	Checks the ISBN to make sure its valid
+			 * 
+			 * 	This process consists of a number of steps:
+			 * 		1. Check ISBN format, transform to ISBN-13
+			 * 		2. Check ISBN length, if invalid, then quit
+			 * 		3. Removes all the invalid characters to make the 
+			 * 			ISBN pure numbers
+			 * 		4. Calculates the ISBN check sum, and varifies with
+			 * 			the last check digit
+			 * 		5. If the tests passed, then add the book record
+			 * 			to the data structure
+			 */
+			String isbn = txtISBN.getText().replaceAll("-", "").replaceAll(" ", "");
+		
 			if (isbn.length() == 10) {
 				isbn = "978" + isbn;
 			}
@@ -119,6 +148,8 @@ public class BookInformationBox extends JFrame implements ActionListener {
 				JOptionPane.showMessageDialog(null, "ISBN too short or too long.");
 				return;
 			}
+			
+			//Check sum verification
 			try {
 				int tot = 0;
 				for (int i = 0; i < 12; i++) {
@@ -131,6 +162,7 @@ public class BookInformationBox extends JFrame implements ActionListener {
 				}
 
 				if (checksum != Integer.parseInt(isbn.substring(12))) {
+					JOptionPane.showMessageDialog(null, "Invalid ISBN check code");
 					return;
 				}
 			} catch (NumberFormatException nfe) {
@@ -161,6 +193,10 @@ public class BookInformationBox extends JFrame implements ActionListener {
 				return;
 			}
 
+			/*
+			 * 	If everything passed, then adds the record
+			 * 	to the data structure
+			 */
 			BookManager.records.get(rIndex).name = txtName.getText();
 			BookManager.records.get(rIndex).author = txtAuthor.getText();
 			BookManager.records.get(rIndex).type = txtType.getText();
