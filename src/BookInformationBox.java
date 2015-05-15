@@ -1,3 +1,12 @@
+/*
+	[BookInformationBox.java]
+	
+	Author: Jim Gao
+	Date: May 14th, 2015
+	Purpose: The book information box which displays independent
+		data records. 
+*/
+
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
