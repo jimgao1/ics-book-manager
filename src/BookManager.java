@@ -1,3 +1,11 @@
+/*
+	[BookManager.java]
+	
+	Author: Jim Gao
+	Date: May 14th, 2015
+	Purpose: The Main Class of the Book manager project
+*/
+
 import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
