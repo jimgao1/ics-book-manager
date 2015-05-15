@@ -31,3 +31,8 @@ If you are building in eclipse, make 'BookManager' the default class.
 ###For Binary Download
 
 Goto /binary_download/ and download BOTH FILES. Hopefully it runs...
+
+###Warnings
+
+The data file is <b> NOT meant to be modified by users </b>, modifying the 
+data file may (almost always) cause data loss. 
