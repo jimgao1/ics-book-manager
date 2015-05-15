@@ -12,6 +12,14 @@ A Book Manager for my CompSci summative assignment<br>
 
 > User friendly GUI
 
+###IOException on start up? u wot m8?
+
+It is probably because you <b> did not download the data file </b>
+
+If you do not have a data file, it will give you an IOException on
+start up. It will then create a data file, so the error will not
+appear again. 
+
 ###Building
 
 You can build the project by running:
