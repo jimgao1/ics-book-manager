@@ -9,6 +9,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -43,8 +44,10 @@ public class BookManager {
 	public static JButton searchName = new JButton("Search by NAME");
 	public static JButton searchAuthor = new JButton("Search by AUTHOR");
 	public static JButton searchISBN = new JButton("Search by ISBN");
+	public static JButton searchType = new JButton("Search by TYPE");
 
 	public static JButton sortBooks = new JButton("Sort Books");
+	public static JButton writeToFile = new JButton("Export to File");
 	public static JButton updateFile = new JButton("Reset List");
 
 	public static JButton about = new JButton("About");
@@ -53,6 +56,19 @@ public class BookManager {
 	public static JLabel dataCaption = new JLabel("Book List: ");
 
 	public static JList bookList;
+	
+	public static final String[] globalBookTypes = {
+		"Book - Non-Fiction", 
+		"Book - Mystery",
+		"Book - Fantasy",
+		"Book - Romance",
+		"Book - Sci-Fi",
+		"Book - Thriller",
+		"DVD",
+		"E-Book",
+		"Magazine",
+		"Other"
+	};
 
 	public static class BookRecord implements Serializable, Comparable<BookRecord> {
 
@@ -237,7 +253,7 @@ public class BookManager {
 			});
 
 			JPanel operationsPanel = new JPanel();
-			operationsPanel.setLayout(new GridLayout(12, 1));
+			operationsPanel.setLayout(new GridLayout(14, 1));
 
 			operationsPanel.add(createBook);
 			operationsPanel.add(deleteBook);
@@ -245,8 +261,10 @@ public class BookManager {
 			operationsPanel.add(searchName);
 			operationsPanel.add(searchAuthor);
 			operationsPanel.add(searchISBN);
+			operationsPanel.add(searchType);
 			operationsPanel.add(new JLabel());
 			operationsPanel.add(sortBooks);
+			operationsPanel.add(writeToFile);
 			operationsPanel.add(updateFile);
 			operationsPanel.add(new JLabel());
 			operationsPanel.add(about);
@@ -413,6 +431,23 @@ public class BookManager {
 						BookManager.resetBookList();
 				}
 			});
+			
+			/*
+			 * 	Runs exact-match for the type of the book, displays the results
+			 * 	on the main list
+			 */
+			searchType.addActionListener(new ActionListener(){
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					String s = (String) JOptionPane.showInputDialog(null, "Please select book type: ", "Book Type", JOptionPane.QUESTION_MESSAGE, null, (Object[])BookManager.globalBookTypes, "Book Type");
+					BookManager.activeList.clear();
+					BookManager.dataCaption.setText("Search results for " + s);
+					
+					for (BookRecord r : BookManager.records)
+						if (r.type.equals(s))
+							activeList.addElement(r.name);
+				}
+			});
 
 			/*
 			 * Pushes the update in the DB to the file, reads from it, and
@@ -427,6 +462,45 @@ public class BookManager {
 
 				}
 			});
+			
+			/*
+			 * 	Writes the current records to a human readable file,
+			 *  where it lets the user determine the file name
+			 */
+			writeToFile.addActionListener(new ActionListener(){
+
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					String fileName = JOptionPane.showInputDialog("File Name? ");
+					
+					if (fileName != null){
+						try{
+							FileWriter writer = new FileWriter(fileName);
+							
+							writer.write("There are " + BookManager.records.size() + " records. \n\n");
+							
+							for (BookRecord r : BookManager.records){
+								writer.write(r.name + "\n");
+								writer.write("\tAuthor: " + r.author + "\n");
+								writer.write("\tBook Type: " + r.type + "\n");
+								writer.write("\tYear Published: " + r.yearPublished + "\n");
+								writer.write("\tISBN: " + r.isbn + "\n");
+								writer.write("\tCover Price: " + r.coverPrice + "\n");
+								
+								writer.write("\n\n");
+							}
+							
+							writer.close();
+							
+							JOptionPane.showMessageDialog(null, "Data written to " + fileName);
+						} catch (IOException ex){
+							JOptionPane.showMessageDialog(null, "IOException: " + ex.getLocalizedMessage());
+						}
+					}
+				}
+				
+				
+			});
 
 			/*
 			 * Asks the user for the sort criteria, updates the static var in
@@ -438,6 +512,7 @@ public class BookManager {
 					Object[] selections = { "Book Name", "Book Author", "Year Published", "ISBN", "Cover Price" };
 
 					String s = (String) JOptionPane.showInputDialog(null, "What do you want to sort by? ", "Sort", JOptionPane.QUESTION_MESSAGE, null, selections, "Book Name");
+					
 
 					if (s.equals("Book Name")) {
 						BookRecord.sortCriteria = 1;

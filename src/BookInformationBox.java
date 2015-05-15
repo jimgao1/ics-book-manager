@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -24,7 +25,7 @@ public class BookInformationBox extends JFrame implements ActionListener {
 	 */
 	public JTextField txtName = new JTextField();
 	public JTextField txtAuthor = new JTextField();
-	public JTextField txtType = new JTextField();
+	public JComboBox<String> comboType = new JComboBox<>(BookManager.globalBookTypes);
 	public JTextField txtYearPublished = new JTextField();
 	public JTextField txtISBN = new JTextField();
 	public JTextField txtCoverPrice = new JTextField();
@@ -51,7 +52,7 @@ public class BookInformationBox extends JFrame implements ActionListener {
 
 		txtName.setFont(new Font("Courier New", Font.PLAIN, 15));
 		txtAuthor.setFont(new Font("Courier New", Font.PLAIN, 15));
-		txtType.setFont(new Font("Courier New", Font.PLAIN, 15));
+		comboType.setFont(new Font("Courier New", Font.PLAIN, 15));
 		txtYearPublished.setFont(new Font("Courier New", Font.PLAIN, 15));
 		txtISBN.setFont(new Font("Courier New", Font.PLAIN, 15));
 		txtCoverPrice.setFont(new Font("Courier New", Font.PLAIN, 15));
@@ -77,7 +78,7 @@ public class BookInformationBox extends JFrame implements ActionListener {
 
 		txtName.setText(BookManager.records.get(rIndex).name);
 		txtAuthor.setText(BookManager.records.get(rIndex).author);
-		txtType.setText(BookManager.records.get(rIndex).type);
+		comboType.setSelectedItem(BookManager.records.get(rIndex).type);
 		txtYearPublished.setText(BookManager.records.get(rIndex).yearPublished);
 		txtISBN.setText(BookManager.records.get(rIndex).isbn);
 		txtCoverPrice.setText(Double.toString(BookManager.records.get(rIndex).coverPrice));
@@ -90,7 +91,7 @@ public class BookInformationBox extends JFrame implements ActionListener {
 		infoPanel.add(new JLabel("Book Author: "));
 		infoPanel.add(txtAuthor);
 		infoPanel.add(new JLabel("Book Type:"));
-		infoPanel.add(txtType);
+		infoPanel.add(comboType);
 		infoPanel.add(new JLabel("Year Published: "));
 		infoPanel.add(txtYearPublished);
 		infoPanel.add(new JLabel("ISBN: "));
@@ -199,7 +200,7 @@ public class BookInformationBox extends JFrame implements ActionListener {
 			 */
 			BookManager.records.get(rIndex).name = txtName.getText();
 			BookManager.records.get(rIndex).author = txtAuthor.getText();
-			BookManager.records.get(rIndex).type = txtType.getText();
+			BookManager.records.get(rIndex).type = (String) comboType.getSelectedItem();
 			BookManager.records.get(rIndex).yearPublished = txtYearPublished.getText();
 			BookManager.records.get(rIndex).isbn = isbn;
 			BookManager.records.get(rIndex).coverPrice = Double.parseDouble(txtCoverPrice.getText());
